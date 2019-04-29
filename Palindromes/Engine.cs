@@ -10,7 +10,8 @@ namespace Palindromes
 			int endIndex)
 		{
 			var middle = (endIndex + startIndex) / 2;
-			int i = middle - 1;
+			var hasMidpoint = ((endIndex + startIndex) % 2) == 0;
+			int i = hasMidpoint ? middle - 1 : middle;
 			int j = middle + 1;
 			for (; i >= startIndex; i--, j++)
 			{

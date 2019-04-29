@@ -7,7 +7,8 @@ namespace Palindromes.Tests
 		[Theory]
 		[InlineData("aasdfgfdsaf", 0, 10, 1, 9)]
 		[InlineData("aaasdfgfdsaff", 1, 11, 2, 10)]
-		public void FindsLargestPalindromeWithCenterBetweenGivenRanges(
+		[InlineData("aasdffdsaf", 0, 9, 1, 8)]
+		public void FindsLargestPalindromeInGivenRange(
 			string input,
 			int startIndex,
 			int endIndex,
