@@ -16,6 +16,9 @@ namespace Palindromes.Tests
 			yield return new object[] { "qwerabcabcbaoppoabcbacbatyu", new List<string> { "abcabcbaoppoabcbacba", "abcba" } }; // one palindrome inside another
 			yield return new object[] { "qwabccbaoppoabqw", new List<string> { "baoppoab", "abccba" } }; // intersection of two palindromes
 			yield return new object[] { "qwerabcbatyuasdabcbafgh", new List<string> { "abcba" } }; // twice the same palindrome
+			yield return new object[] { "qwerab c batyui", new List<string> { "ab c ba" } }; // are those even allowed?
+			yield return new object[] { "fffff", new List<string> { "fffff", "ffff", "fff" } }; // this is a weird rule, but makes sense and excluding intersections requires additional requirements
+			yield return new object[] { "qwerabcbatyuiqwewqopas", new List<string> { "abcba", "qwewq" } }; // same length, different palindromes
 		}
 
 		[Theory]
