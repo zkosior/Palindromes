@@ -22,8 +22,9 @@ namespace Palindromes
 
 		public void Add(TKey key, TValue value)
 		{
-			if (this.items.Keys.Count < this.size ||
-				key.CompareTo(this.items.Keys.FirstOrDefault()) > 0)
+			if ((this.items.Keys.Count < this.size ||
+				key.CompareTo(this.items.Keys.FirstOrDefault()) > 0) &&
+				!this.items.ContainsKey(key))
 			{
 				if (this.items.Count == this.size)
 				{

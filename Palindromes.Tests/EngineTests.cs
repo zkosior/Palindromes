@@ -13,6 +13,7 @@ namespace Palindromes.Tests
 			yield return new object[] { "sqrrqabccbatudefggfedvwhijkllkjihxymnnmzpop", new List<string> { "hijkllkjih", "defggfed", "abccba" } };
 			yield return new object[] { "aasdfgfdsaf", new List<string> { "asdfgfdsa" } };
 			yield return new object[] { "aasdfgfdsaffff", new List<string> { "asdfgfdsa" } };
+			yield return new object[] { "qwerabcabcdefghgfedcbaoprsttsrpoabcdefghgfedcbacbatyuiopasdfghjklzxcvbnm", new List<string> { "abcdefghgfedcba", "abcabcdefghgfedcbaoprsttsrpoabcdefghgfedcbacba" } };
 		}
 
 		[Theory]
