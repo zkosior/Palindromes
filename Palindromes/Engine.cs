@@ -9,11 +9,11 @@ namespace Palindromes
 
 	public static class Engine
 	{
-		public static IEnumerable<string> FindNLargestPalindromes(
+		public static IEnumerable<(string Text, int Index, int Length)> FindNLargestPalindromes(
 			string input,
 			int howMany)
 		{
-			if (InvalidInput(input)) return Array.Empty<string>();
+			if (InvalidInput(input)) return Array.Empty<(string, int, int)>();
 			var found = new List<(int Start, int End, int Length)>(howMany);
 
 			FindAndSave(input, howMany, 0, input.Length - 1, found);
@@ -151,11 +151,12 @@ namespace Palindromes
 			return false;
 		}
 
-		private static List<string> ParseResults(
+		private static List<(string, int, int)> ParseResults(
 			string input,
 			List<(int Start, int End, int Length)> found)
 		{
-			var results = found.Select(p => input.Substring(p.Start, p.Length));
+			var results = found.Select(p =>
+				(input.Substring(p.Start, p.Length), p.Start, p.Length));
 			results.Reverse();
 			return results.ToList();
 		}

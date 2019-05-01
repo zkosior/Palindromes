@@ -2,23 +2,24 @@ namespace Palindromes.Tests
 {
 	using FluentAssertions;
 	using System.Collections.Generic;
+	using System.Linq;
 	using Xunit;
 
 	public class EngineTests
 	{
 		public static IEnumerable<object[]> SuccessfulPalindromes()
 		{
-			yield return new object[] { "asdfgfdsa", new List<string> { "asdfgfdsa" } }; // 100% match with two central elements
-			yield return new object[] { "asdfggfdsa", new List<string> { "asdfggfdsa" } }; // 100% match with central element
-			yield return new object[] { "sqrrqabccbatudefggfedvwhijkllkjihxymnnmzpop", new List<string> { "hijkllkjih", "defggfed", "abccba" } }; // example from assignment
-			yield return new object[] { "qasdfgfdsaf", new List<string> { "asdfgfdsa" } }; // central match with margins
-			yield return new object[] { "qasdfgfdsawert", new List<string> { "asdfgfdsa" } }; // not central match
-			yield return new object[] { "qwerabcabcbaoppoabcbacbatyu", new List<string> { "abcabcbaoppoabcbacba", "abcba" } }; // one palindrome inside another
-			yield return new object[] { "qwabccbaoppoabqw", new List<string> { "baoppoab", "abccba" } }; // intersection of two palindromes
-			yield return new object[] { "qwerabcbatyuasdabcbafgh", new List<string> { "abcba" } }; // twice the same palindrome
-			yield return new object[] { "qwerab c batyui", new List<string> { "ab c ba" } }; // are those even allowed?
-			yield return new object[] { "fffff", new List<string> { "fffff", "ffff", "fff" } }; // this is a weird rule, but makes sense and excluding intersections requires additional requirements
-			yield return new object[] { "qwerabcbatyuiqwewqopas", new List<string> { "abcba", "qwewq" } }; // same length, different palindromes
+			yield return new object[] { "asdfgfdsa", new List<(string, int, int)> { ("asdfgfdsa", 0, 9) } }; // 100% match with two central elements
+			yield return new object[] { "asdfggfdsa", new List<(string, int, int)> { ("asdfggfdsa", 0, 10) } }; // 100% match with central element
+			yield return new object[] { "sqrrqabccbatudefggfedvwhijkllkjihxymnnmzpop", new List<(string, int, int)> { ("hijkllkjih", 23, 10), ("defggfed", 13, 8), ("abccba", 5, 6) } }; // example from assignment
+			yield return new object[] { "qasdfgfdsaf", new List<(string, int, int)> { ("asdfgfdsa", 1, 9) } }; // central match with margins
+			yield return new object[] { "qasdfgfdsawert", new List<(string, int, int)> { ("asdfgfdsa", 1, 9) } }; // not central match
+			yield return new object[] { "qwerabcabcbaoppoabcbacbatyu", new List<(string, int, int)> { ("abcabcbaoppoabcbacba", 4, 20), ("abcba", 7, 5) } }; // one palindrome inside another
+			yield return new object[] { "qwabccbaoppoabqw", new List<(string, int, int)> { ("baoppoab", 6, 8), ("abccba", 2, 6) } }; // intersection of two palindromes
+			yield return new object[] { "qwerabcbatyuasdabcbafgh", new List<(string, int, int)> { ("abcba", 4, 5) } }; // twice the same palindrome
+			yield return new object[] { "qwerab c batyui", new List<(string, int, int)> { ("ab c ba", 4, 7) } }; // are those even allowed?
+			yield return new object[] { "fffff", new List<(string, int, int)> { ("fffff", 0, 5), ("ffff", 0, 4), ("fff", 0, 3) } }; // this is a weird rule, but makes sense and excluding intersections requires additional requirements
+			yield return new object[] { "qwerabcbatyuiqwewqopas", new List<(string, int, int)> { ("abcba", 4, 5), ("qwewq", 13, 5) } }; // same length, different palindromes
 		}
 
 		[Theory]
@@ -73,11 +74,12 @@ namespace Palindromes.Tests
 		[Theory]
 		[MemberData(nameof(SuccessfulPalindromes))]
 		public void FindsNLargestPalindromes(
-			string input, IEnumerable<string> expectedResults)
+			string input, IEnumerable<(string, int, int)> expectedResults)
 		{
 			var result = Engine.FindNLargestPalindromes(input, 3);
 
-			result.Should().BeEquivalentTo(expectedResults);
+			result.Select(p => (p.Text, p.Index, p.Length))
+				.Should().BeEquivalentTo(expectedResults);
 		}
 	}
 }
