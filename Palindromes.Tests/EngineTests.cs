@@ -1,9 +1,16 @@
 namespace Palindromes.Tests
 {
+	using FluentAssertions;
+	using System.Collections.Generic;
 	using Xunit;
 
 	public class EngineTests
 	{
+		public static IEnumerable<object[]> SuccessfulPalindromes()
+		{
+			yield return new object[] { "sqrrqabccbatudefggfedvwhijkllkjihxymnnmzpop", new List<string> { "hijkllkjih", "defggfed", "abccba" } };
+		}
+
 		[Theory]
 		[InlineData("aasdfgfdsaf", 0, 10, 1, 9)]
 		[InlineData("aaasdfgfdsaff", 1, 11, 2, 10)]
@@ -31,7 +38,7 @@ namespace Palindromes.Tests
 		[InlineData("", 0, 0)]
 		[InlineData(" ", 0, 0)]
 		[InlineData("   ", 0, 2)]
-		public void WhenNoPalindromeReturnsNull(
+		public void WhenNoPalindrome_ReturnsNull(
 			string input,
 			int startIndex,
 			int endIndex)
@@ -59,12 +66,31 @@ namespace Palindromes.Tests
 		[InlineData("abcdefghijk")]
 		[InlineData("a")]
 		[InlineData("")]
-		public void WhenNoPalindromeAtAllReturnsNull(
+		public void WhenNoPalindromeAtAll_ReturnsNull(
 			string input)
 		{
 			var result = Engine.FindPalindrome(input);
 
 			Assert.Null(result);
+		}
+
+		[Theory]
+		[InlineData("abcdefghijklmnopqrstuvwxyz")]
+		public void WhenNoPalindromes_ReturnsEmptyCollection(string input)
+		{
+			var result = Engine.FindLargestPalindromes(input, 3);
+
+			Assert.Empty(result);
+		}
+
+		[Theory]
+		[MemberData(nameof(SuccessfulPalindromes))]
+		public void WhenPalindromesExist_ReurnsThem(
+			string input, IEnumerable<string> expectedResults)
+		{
+			var result = Engine.FindLargestPalindromes(input, 3);
+
+			result.Should().Contain(expectedResults);
 		}
 	}
 }

@@ -1,5 +1,9 @@
 namespace Palindromes
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+
 #pragma warning disable SA1008 // Opening parenthesis must be spaced correctly
 #pragma warning disable SA1009 // Closing parenthesis must be spaced correctly
 
@@ -46,6 +50,41 @@ namespace Palindromes
 			}
 
 			return null;
+		}
+
+		public static IEnumerable<string> FindLargestPalindromes(
+			string input,
+			int howMany)
+		{
+			if (string.IsNullOrWhiteSpace(input) ||
+				input.Length == 1) return Array.Empty<string>();
+			var found = new SortedLimittedList<int, (int Start, int End)>(howMany);
+
+			var middle = FindLargestPalindrome(input, 0, input.Length - 1);
+			if (middle.HasValue)
+			{
+				found.Add(middle.Value.End - middle.Value.Start, (middle.Value.Start, middle.Value.End));
+			}
+
+			for (int i = 1; i < input.Length - 2; i++)
+			{
+				if (found.Count == 3 &&
+					found.SmallestKey() >= input.Length - 1 - i) break;
+				var left = FindLargestPalindrome(input, 0, input.Length - 1 - i);
+				if (left.HasValue)
+					found.Add(left.Value.End - left.Value.Start, (left.Value.Start, left.Value.End));
+				var right = FindLargestPalindrome(input, i, input.Length - 1);
+				if (right.HasValue)
+					found.Add(right.Value.End - right.Value.Start, (right.Value.Start, right.Value.End));
+			}
+
+			var result = new List<string>();
+			foreach (var p in found.Values.Reverse())
+			{
+				result.Add(input.Substring(p.Start, p.End - p.Start + 1));
+			}
+
+			return result;
 		}
 	}
 
