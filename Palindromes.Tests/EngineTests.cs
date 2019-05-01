@@ -8,12 +8,14 @@ namespace Palindromes.Tests
 	{
 		public static IEnumerable<object[]> SuccessfulPalindromes()
 		{
-			yield return new object[] { "asdfgfdsa", new List<string> { "asdfgfdsa" } };
-			yield return new object[] { "asdfggfdsa", new List<string> { "asdfggfdsa" } };
-			yield return new object[] { "sqrrqabccbatudefggfedvwhijkllkjihxymnnmzpop", new List<string> { "hijkllkjih", "defggfed", "abccba" } };
-			yield return new object[] { "aasdfgfdsaf", new List<string> { "asdfgfdsa" } };
-			yield return new object[] { "aasdfgfdsaffff", new List<string> { "asdfgfdsa" } };
-			yield return new object[] { "qwerabcabcdefghgfedcbaoprsttsrpoabcdefghgfedcbacbatyuiopasdfghjklzxcvbnm", new List<string> { "abcdefghgfedcba", "abcabcdefghgfedcbaoprsttsrpoabcdefghgfedcbacba" } };
+			yield return new object[] { "asdfgfdsa", new List<string> { "asdfgfdsa" } }; // 100% match with two central elements
+			yield return new object[] { "asdfggfdsa", new List<string> { "asdfggfdsa" } }; // 100% match with central element
+			yield return new object[] { "sqrrqabccbatudefggfedvwhijkllkjihxymnnmzpop", new List<string> { "hijkllkjih", "defggfed", "abccba" } }; // example from assignment
+			yield return new object[] { "qasdfgfdsaf", new List<string> { "asdfgfdsa" } }; // central match with margins
+			yield return new object[] { "qasdfgfdsawert", new List<string> { "asdfgfdsa" } }; // not central match
+			yield return new object[] { "qwerabcabcbaoppoabcbacbatyu", new List<string> { "abcabcbaoppoabcbacba", "abcba" } }; // one palindrome inside another
+			yield return new object[] { "qwabccbaoppoabqw", new List<string> { "baoppoab", "abccba" } }; // intersection of two palindromes
+			yield return new object[] { "qwerabcbatyuasdabcbafgh", new List<string> { "abcba" } }; // twice the same palindrome
 		}
 
 		[Theory]
@@ -72,7 +74,7 @@ namespace Palindromes.Tests
 		{
 			var result = Engine.FindLargestPalindromes(input, 3);
 
-			result.Should().Contain(expectedResults);
+			result.Should().BeEquivalentTo(expectedResults);
 		}
 	}
 }
