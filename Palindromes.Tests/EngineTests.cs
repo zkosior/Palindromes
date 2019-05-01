@@ -8,13 +8,18 @@ namespace Palindromes.Tests
 	{
 		public static IEnumerable<object[]> SuccessfulPalindromes()
 		{
+			yield return new object[] { "asdfgfdsa", new List<string> { "asdfgfdsa" } };
+			yield return new object[] { "asdfggfdsa", new List<string> { "asdfggfdsa" } };
 			yield return new object[] { "sqrrqabccbatudefggfedvwhijkllkjihxymnnmzpop", new List<string> { "hijkllkjih", "defggfed", "abccba" } };
+			yield return new object[] { "aasdfgfdsaf", new List<string> { "asdfgfdsa" } };
+			yield return new object[] { "aasdfgfdsaffff", new List<string> { "asdfgfdsa" } };
 		}
 
 		[Theory]
 		[InlineData("aasdfgfdsaf", 0, 10, 1, 9)]
 		[InlineData("aaasdfgfdsaff", 1, 11, 2, 10)]
 		[InlineData("aasdffdsaf", 0, 9, 1, 8)]
+		[InlineData("hhhh", 0, 3, 0, 3)]
 		public void FindsLargestPalindromeInGivenRange(
 			string input,
 			int startIndex,
@@ -49,33 +54,9 @@ namespace Palindromes.Tests
 		}
 
 		[Theory]
-		[InlineData("aasdfgfdsaf", 1, 9)]
-		[InlineData("aasdfgfdsaffff", 1, 9)]
-		public void FindsPalindromeOutsideCenter(
-			string input,
-			int palindromeStart,
-			int palindromeEnd)
-		{
-			(int start, int end) = Engine.FindPalindrome(input).Value;
-
-			Assert.Equal(palindromeStart, start);
-			Assert.Equal(palindromeEnd, end);
-		}
-
-		[Theory]
-		[InlineData("abcdefghijk")]
+		[InlineData("abcdefghijklmnopqrstuvwxyz")]
 		[InlineData("a")]
 		[InlineData("")]
-		public void WhenNoPalindromeAtAll_ReturnsNull(
-			string input)
-		{
-			var result = Engine.FindPalindrome(input);
-
-			Assert.Null(result);
-		}
-
-		[Theory]
-		[InlineData("abcdefghijklmnopqrstuvwxyz")]
 		public void WhenNoPalindromes_ReturnsEmptyCollection(string input)
 		{
 			var result = Engine.FindLargestPalindromes(input, 3);

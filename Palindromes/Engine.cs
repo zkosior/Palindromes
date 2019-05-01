@@ -24,32 +24,10 @@ namespace Palindromes
 			for (; i >= startIndex; i--, j++)
 			{
 				if (input[i] != input[j])
-				{
-					i++;
-					j--;
-					break;
-				}
+					return ++i >= --j ? default((int, int)?) : (i, j);
 			}
 
-			if (i >= j) return null;
-			return (i, j);
-		}
-
-		public static (int Start, int End)? FindPalindrome(string input)
-		{
-			if (string.IsNullOrWhiteSpace(input)) return null;
-			var zero = FindLargestPalindrome(input, 0, input.Length - 1);
-			if (zero.HasValue) return zero.Value;
-
-			for (int i = 1; i < input.Length - 2; i++)
-			{
-				var left = FindLargestPalindrome(input, 0, input.Length - 1 - i);
-				if (left.HasValue) return left.Value;
-				var right = FindLargestPalindrome(input, i, input.Length - 1);
-				if (right.HasValue) return right.Value;
-			}
-
-			return null;
+			return (++i, --j);
 		}
 
 		public static IEnumerable<string> FindLargestPalindromes(
