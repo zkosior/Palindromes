@@ -9,16 +9,7 @@ namespace Palindromes
 
 	public static class Engine
 	{
-		public static (int Start, int End)? FindLargestPalindrome(
-			string input,
-			int startIndex,
-			int endIndex)
-		{
-			if (string.IsNullOrWhiteSpace(input)) return null;
-			return FindLargest(input, startIndex, endIndex);
-		}
-
-		public static IEnumerable<string> FindLargestPalindromes(
+		public static IEnumerable<string> FindNLargestPalindromes(
 			string input,
 			int howMany)
 		{
@@ -41,12 +32,45 @@ namespace Palindromes
 			return ParseResults(input, found);
 		}
 
+		public static (int Start, int End)? FindLargestPalindrome(
+			string input,
+			int startIndex,
+			int endIndex)
+		{
+			if (string.IsNullOrWhiteSpace(input)) return null;
+			return FindLargest(input, startIndex, endIndex);
+		}
+
+		private static (int Start, int End)? FindLargest(
+			string input,
+			int startIndex,
+			int endIndex)
+		{
+			if (startIndex == endIndex) return null;
+
+			var middle = (endIndex + startIndex) / 2;
+			var hasMidpoint = (endIndex + startIndex) % 2 == 0;
+			int i = hasMidpoint ? middle - 1 : middle;
+			int j = middle + 1;
+			for (; i >= startIndex; i--, j++)
+			{
+				if (input[i] != input[j])
+				{
+					return ++i >= --j
+						? default((int, int)?)
+						: (i, j);
+				}
+			}
+
+			return (++i, --j);
+		}
+
 		private static bool NoPotentialForLargeEnoughPalindrome(
 			List<(int Start, int End, int Length)> found,
-			int lookingForHowMany,
+			int howMany,
 			int maxPossibleLength)
 		{
-			return found.Count == lookingForHowMany &&
+			return found.Count == howMany &&
 				   found.FirstOrDefault().Length >= maxPossibleLength;
 		}
 
@@ -103,35 +127,10 @@ namespace Palindromes
 			var i = 0;
 			for (; i < found.Count; i++)
 			{
-				var currentItemLength = found[i].Length;
-				if (currentItemLength >= length) return i;
+				if (found[i].Length >= length) return i;
 			}
 
 			return i;
-		}
-
-		private static (int Start, int End)? FindLargest(
-				string input,
-				int startIndex,
-				int endIndex)
-		{
-			if (startIndex == endIndex) return null;
-
-			var middle = (endIndex + startIndex) / 2;
-			var hasMidpoint = (endIndex + startIndex) % 2 == 0;
-			int i = hasMidpoint ? middle - 1 : middle;
-			int j = middle + 1;
-			for (; i >= startIndex; i--, j++)
-			{
-				if (input[i] != input[j])
-				{
-					return ++i >= --j
-						? default((int, int)?)
-						: (i, j);
-				}
-			}
-
-			return (++i, --j);
 		}
 
 		private static bool NeedsToBeSaved(
@@ -145,7 +144,8 @@ namespace Palindromes
 				length > found[0].Length)
 			{
 				var currentText = input.Substring(start, length);
-				return !found.Any(p => input.Substring(p.Start, p.Length) == currentText);
+				return found.All(p =>
+					input.Substring(p.Start, p.Length) != currentText);
 			}
 
 			return false;
@@ -155,13 +155,9 @@ namespace Palindromes
 			string input,
 			List<(int Start, int End, int Length)> found)
 		{
-			var result = new List<string>();
-			foreach (var p in found)
-			{
-				result.Insert(0, input.Substring(p.Start, p.End - p.Start + 1));
-			}
-
-			return result;
+			var results = found.Select(p => input.Substring(p.Start, p.Length));
+			results.Reverse();
+			return results.ToList();
 		}
 	}
 

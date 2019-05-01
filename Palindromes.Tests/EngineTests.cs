@@ -65,17 +65,17 @@ namespace Palindromes.Tests
 		[InlineData("")]
 		public void WhenNoPalindromes_ReturnsEmptyCollection(string input)
 		{
-			var result = Engine.FindLargestPalindromes(input, 3);
+			var result = Engine.FindNLargestPalindromes(input, 3);
 
 			Assert.Empty(result);
 		}
 
 		[Theory]
 		[MemberData(nameof(SuccessfulPalindromes))]
-		public void WhenPalindromesExist_ReurnsThem(
+		public void FindsNLargestPalindromes(
 			string input, IEnumerable<string> expectedResults)
 		{
-			var result = Engine.FindLargestPalindromes(input, 3);
+			var result = Engine.FindNLargestPalindromes(input, 3);
 
 			result.Should().BeEquivalentTo(expectedResults);
 		}
