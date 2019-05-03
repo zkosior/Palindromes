@@ -21,6 +21,7 @@ namespace Palindromes.Tests
 			yield return new object[] { "qwerab c batyui", new List<(string, int, int)> { ("ab c ba", 4, 7) } }; // are those even allowed?
 			yield return new object[] { "fffff", new List<(string, int, int)> { ("fffff", 0, 5), ("ffff", 0, 4), ("fff", 0, 3) } }; // this is a weird rule, but makes sense and excluding intersections requires additional requirements
 			yield return new object[] { "qwerabcbatyuiqwewqopas", new List<(string, int, int)> { ("abcba", 4, 5), ("qwewq", 13, 5) } }; // same length, different palindromes
+			yield return new object[] { "sqrrqabccbatudefggfedvwhijkllkjihxymnnmzpopoopop", new List<(string, int, int)> { ("hijkllkjih", 23, 10), ("defggfed", 13, 8), ("popoopop", 40, 8) } }; // more than three palindromes
 		}
 
 		[Theory]
