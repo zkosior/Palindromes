@@ -155,10 +155,10 @@ namespace Palindromes
 			string input,
 			List<(int Start, int End, int Length)> found)
 		{
-			var results = found.Select(p =>
-				(input.Substring(p.Start, p.Length), p.Start, p.Length));
-			results.Reverse();
-			return results.ToList();
+			return found
+				.Select(p => (input.Substring(p.Start, p.Length), p.Start, p.Length))
+				.Reverse()
+				.ToList();
 		}
 	}
 
