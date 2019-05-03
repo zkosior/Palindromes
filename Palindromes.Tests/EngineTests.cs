@@ -5,6 +5,7 @@ namespace Palindromes.Tests
 	using System.Linq;
 	using Xunit;
 
+	[Trait("TestCategory", "Unit")]
 	public class EngineTests
 	{
 		public static IEnumerable<object[]> SuccessfulPalindromes()
