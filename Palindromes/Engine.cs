@@ -9,7 +9,7 @@ namespace Palindromes
 
 	public static class Engine
 	{
-		public static IEnumerable<(string Text, int Index, int Length)> FindNLargestPalindromes(
+		public static IList<(string Text, int Index, int Length)> FindNLargestPalindromes(
 			string input,
 			int howMany)
 		{
