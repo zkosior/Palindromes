@@ -4,24 +4,22 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AssemblyName>Palindromes.Tests</AssemblyName>
     <RootNamespace>Palindromes.Tests</RootNamespace>
-	<CodeAnalysisRuleSet>..\CodeAnalysis\StyleCop.tests.ruleset</CodeAnalysisRuleSet>
+	<CodeAnalysisRuleSet>..\..\CodeAnalysis\StyleCop.tests.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <DocumentationFile>C:\Users\Zbigniew\Source\Repos\Recruitment\McLaren.Palindromes\Palindromes.Tests\Palindromes.Tests.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Users\Zbigniew\Source\Repos\Recruitment\McLaren.Palindromes\Palindromes.Tests\Palindromes.Tests.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="..\CodeAnalysis\StyleCop.tests.ruleset" Link="StyleCop.ruleset" />
+    <AdditionalFiles Include="..\..\CodeAnalysis\StyleCop.tests.ruleset" Link="StyleCop.ruleset" />
     <None Include="$(SolutionDir).editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
@@ -46,7 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Palindromes\Palindromes.csproj" />
+    <ProjectReference Include="..\..\src\Palindromes\Palindromes.csproj" />
   </ItemGroup>
 
 </Project>

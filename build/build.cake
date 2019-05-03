@@ -78,7 +78,7 @@ Task("UnitTests")
         var testSettings = TestSettings;
         testSettings.Filter = "TestCategory=Unit";
         DotNetCoreTest(
-            "../Palindromes.Tests/Palindromes.Tests.csproj",
+            "../test/Palindromes.Tests/Palindromes.Tests.csproj",
         testSettings);
     });
 
@@ -117,7 +117,7 @@ Task("BuildConsoleApp")
     .Does(() =>
     {
         DotNetCorePublish(
-            "../Palindromes/Palindromes.csproj",
+            "../src/Palindromes/Palindromes.csproj",
             new DotNetCorePublishSettings
             {
                 Framework = "netcoreapp2.2",
