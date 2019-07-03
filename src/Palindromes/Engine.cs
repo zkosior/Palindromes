@@ -23,9 +23,7 @@ namespace Palindromes
 				found.Select(p => (p.Start, p.Length)).ToList());
 		}
 
-		/// <summary>
-		/// Possible palindrome in the centre of input string.
-		/// </summary>
+		// Possible palindrome in the centre of input string.
 		public static (string Text, int Start, int Length)? FindLargestPalindrome(
 			string input,
 			int startIndex,
@@ -66,11 +64,10 @@ namespace Palindromes
 			int startIndex,
 			int length)
 		{
-			var endIndex = startIndex + length - 1;
-			if (startIndex == endIndex) return null;
+			if (length == 1) return null;
 
-			var middle = (endIndex + startIndex) / 2;
-			var hasMidpoint = (endIndex + startIndex) % 2 == 0;
+			var middle = startIndex + ((length - 1) / 2);
+			var hasMidpoint = (length - 1) % 2 == 0;
 			int i = hasMidpoint ? middle - 1 : middle;
 			int j = middle + 1;
 			for (; i >= startIndex; i--, j++)
@@ -83,23 +80,18 @@ namespace Palindromes
 				}
 			}
 
-			return (++i, --j - i + 1);
+			return (++i, j - i);
 		}
 
 		private static bool NoPotentialForLargeEnoughPalindrome(
 			List<(int Start, int Length)> found,
 			int howMany,
-			int maxPossibleLength)
-		{
-			return found.Count == howMany &&
-				   found.FirstOrDefault().Length >= maxPossibleLength;
-		}
+			int maxPossibleLength) =>
+				found.Count == howMany &&
+				found.FirstOrDefault().Length >= maxPossibleLength;
 
-		private static bool InvalidInput(string input)
-		{
-			return string.IsNullOrWhiteSpace(input) ||
-				   input.Length == 1;
-		}
+		private static bool InvalidInput(string input) =>
+			string.IsNullOrWhiteSpace(input) || input.Length == 1;
 
 		private static void FindAndSave(
 			ReadOnlySpan<char> input,
@@ -179,13 +171,13 @@ namespace Palindromes
 
 		private static List<(string, int, int)> ParseResults(
 			string input,
-			List<(int Start, int Length)> found)
-		{
-			return found
-				.Select(p => (input.Substring(p.Start, p.Length), p.Start, p.Length))
+			List<(int Start, int Length)> found) => found
+				.Select(p =>
+					(input.Substring(p.Start, p.Length),
+					p.Start,
+					p.Length))
 				.Reverse()
 				.ToList();
-		}
 	}
 
 #pragma warning restore SA1009 // Closing parenthesis must be spaced correctly
