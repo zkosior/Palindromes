@@ -25,37 +25,37 @@ namespace Palindromes.Tests
 		}
 
 		[Theory]
-		[InlineData("aasdfgfdsaf", 0, 10, "asdfgfdsa")]
+		[InlineData("aasdfgfdsaf", 0, 11, "asdfgfdsa")]
 		[InlineData("aaasdfgfdsaff", 1, 11, "asdfgfdsa")]
-		[InlineData("aasdffdsaf", 0, 9, "asdffdsa")]
-		[InlineData("hhhh", 0, 3, "hhhh")]
+		[InlineData("aasdffdsaf", 0, 10, "asdffdsa")]
+		[InlineData("hhhh", 0, 4, "hhhh")]
 		public void FindsLargestPalindromeInGivenRange(
 			string input,
 			int startIndex,
-			int endIndex,
+			int length,
 			string largest)
 		{
-			var result = Engine.FindLargestPalindrome(input, startIndex, endIndex);
+			var result = Engine.FindLargestPalindrome(input, startIndex, length);
 
 			Assert.Equal(largest, result.Value.Text);
 		}
 
 		[Theory]
-		[InlineData("a", 0, 0)]
-		[InlineData("ab", 0, 1)]
+		[InlineData("a", 0, 1)]
+		[InlineData("ab", 0, 2)]
 		[InlineData("ab", 1, 1)]
-		[InlineData("abc", 0, 2)]
+		[InlineData("abc", 0, 3)]
 		[InlineData("abc", 1, 1)]
 		[InlineData("abcde", 1, 3)]
 		[InlineData("", 0, 0)]
-		[InlineData(" ", 0, 0)]
-		[InlineData("   ", 0, 2)]
+		[InlineData(" ", 0, 1)]
+		[InlineData("   ", 0, 3)]
 		public void WhenNoPalindrome_ReturnsNull(
 			string input,
 			int startIndex,
-			int endIndex)
+			int length)
 		{
-			var result = Engine.FindLargestPalindrome(input, startIndex, endIndex);
+			var result = Engine.FindLargestPalindrome(input, startIndex, length);
 
 			Assert.Null(result);
 		}
@@ -78,7 +78,7 @@ namespace Palindromes.Tests
 		{
 			var result = Engine.FindNLargestPalindromes(input, 3);
 
-			result.Select(p => (p.Text, p.Index, p.Length))
+			result.Select(p => (p.Text, p.Start, p.Length))
 				.Should().BeEquivalentTo(expectedResults);
 		}
 	}

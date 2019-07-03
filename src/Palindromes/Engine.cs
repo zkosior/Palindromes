@@ -9,7 +9,7 @@ namespace Palindromes
 
 	public static class Engine
 	{
-		public static IList<(string Text, int Index, int Length)> FindNLargestPalindromes(
+		public static IList<(string Text, int Start, int Length)> FindNLargestPalindromes(
 			string input,
 			int howMany)
 		{
@@ -23,19 +23,22 @@ namespace Palindromes
 				found.Select(p => (p.Start, p.Length)).ToList());
 		}
 
+		/// <summary>
+		/// Possible palindrome in the centre of input string.
+		/// </summary>
 		public static (string Text, int Start, int Length)? FindLargestPalindrome(
 			string input,
 			int startIndex,
-			int endIndex)
+			int length)
 		{
 			if (string.IsNullOrWhiteSpace(input)) return null;
-			var found = FindLargest(input, startIndex, endIndex - startIndex + 1);
+			var found = FindLargest(input, startIndex, length);
 			if (!found.HasValue) return null;
 			return (input.Substring(
-				found.Value.Start,
-				found.Value.Length),
-				found.Value.Start,
-				found.Value.Length);
+						found.Value.Start,
+						found.Value.Length),
+					found.Value.Start,
+					found.Value.Length);
 		}
 
 		private static void FindPalindromes(
@@ -44,7 +47,7 @@ namespace Palindromes
 			List<(int Start, int Length)> found)
 		{
 			var spanInput = input.AsSpan();
-			FindAndSave(spanInput, howMany, 0, input.Length - 1, found);
+			FindAndSave(spanInput, howMany, 0, input.Length, found);
 
 			for (int i = 1; i < input.Length - 2; i++)
 			{
@@ -53,8 +56,8 @@ namespace Palindromes
 					howMany,
 					input.Length - 1 - i)) break;
 
-				FindAndSave(spanInput, howMany, 0, input.Length - 1 - i, found);
-				FindAndSave(spanInput, howMany, i, input.Length - 1, found);
+				FindAndSave(spanInput, howMany, 0, input.Length - i, found);
+				FindAndSave(spanInput, howMany, i, input.Length - i, found);
 			}
 		}
 
@@ -102,10 +105,10 @@ namespace Palindromes
 			ReadOnlySpan<char> input,
 			int maxSize,
 			int start,
-			int end,
+			int length,
 			List<(int Start, int Length)> found)
 		{
-			var result = FindLargest(input, start, end - start + 1);
+			var result = FindLargest(input, start, length);
 			if (result.HasValue)
 			{
 				Add(

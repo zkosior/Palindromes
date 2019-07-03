@@ -25,7 +25,7 @@ namespace Palindromes
 
 			foreach (var p in palindromes)
 			{
-				Console.WriteLine($"Text: {p.Text}, Index: {p.Index}, Length: {p.Length}");
+				Console.WriteLine($"Text: {p.Text}, Index: {p.Start}, Length: {p.Length}");
 			}
 		}
 	}
