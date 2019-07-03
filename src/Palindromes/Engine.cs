@@ -16,7 +16,8 @@ namespace Palindromes
 			if (InvalidInput(input)) return Array.Empty<(string, int, int)>();
 			var found = new List<(int Start, int End, int Length)>(howMany);
 
-			FindAndSave(input, howMany, 0, input.Length - 1, found);
+			var spanInput = input.AsSpan();
+			FindAndSave(spanInput, howMany, 0, input.Length - 1, found);
 
 			for (int i = 1; i < input.Length - 2; i++)
 			{
@@ -25,24 +26,31 @@ namespace Palindromes
 					howMany,
 					input.Length - 1 - i)) break;
 
-				FindAndSave(input, howMany, 0, input.Length - 1 - i, found);
-				FindAndSave(input, howMany, i, input.Length - 1, found);
+				FindAndSave(spanInput, howMany, 0, input.Length - 1 - i, found);
+				FindAndSave(spanInput, howMany, i, input.Length - 1, found);
 			}
 
 			return ParseResults(input, found);
 		}
 
-		public static (int Start, int End)? FindLargestPalindrome(
+		public static (string Text, int Start, int Length)? FindLargestPalindrome(
 			string input,
 			int startIndex,
 			int endIndex)
 		{
 			if (string.IsNullOrWhiteSpace(input)) return null;
-			return FindLargest(input, startIndex, endIndex);
+			var found = FindLargest(input, startIndex, endIndex);
+			if (!found.HasValue) return null;
+			var length = found.Value.End - found.Value.Start + 1;
+			return (input.Substring(
+				found.Value.Start,
+				length),
+				found.Value.Start,
+				length);
 		}
 
 		private static (int Start, int End)? FindLargest(
-			string input,
+			ReadOnlySpan<char> input,
 			int startIndex,
 			int endIndex)
 		{
@@ -81,7 +89,7 @@ namespace Palindromes
 		}
 
 		private static void FindAndSave(
-			string input,
+			ReadOnlySpan<char> input,
 			int maxSize,
 			int start,
 			int end,
@@ -100,7 +108,7 @@ namespace Palindromes
 		}
 
 		private static void Add(
-			string input,
+			ReadOnlySpan<char> input,
 			int maxSize,
 			List<(int Start, int End, int Length)> found,
 			int start,
@@ -134,21 +142,27 @@ namespace Palindromes
 		}
 
 		private static bool NeedsToBeSaved(
-			string input,
+			ReadOnlySpan<char> input,
 			int maxSize,
 			List<(int Start, int End, int Length)> found,
 			int start,
 			int length)
 		{
-			if (found.Count < maxSize ||
-				length > found[0].Length)
+			if (found.Count >= maxSize &&
+				length <= found[0].Length)
 			{
-				var currentText = input.Substring(start, length);
-				return found.All(p =>
-					input.Substring(p.Start, p.Length) != currentText);
+				return false;
 			}
 
-			return false;
+			var currentText = input.Slice(start, length);
+			foreach (var f in found)
+			{
+				if (input.Slice(f.Start, f.Length)
+					.Equals(currentText, StringComparison.Ordinal))
+					return false;
+			}
+
+			return true;
 		}
 
 		private static List<(string, int, int)> ParseResults(

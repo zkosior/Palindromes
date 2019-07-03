@@ -25,21 +25,19 @@ namespace Palindromes.Tests
 		}
 
 		[Theory]
-		[InlineData("aasdfgfdsaf", 0, 10, 1, 9)]
-		[InlineData("aaasdfgfdsaff", 1, 11, 2, 10)]
-		[InlineData("aasdffdsaf", 0, 9, 1, 8)]
-		[InlineData("hhhh", 0, 3, 0, 3)]
+		[InlineData("aasdfgfdsaf", 0, 10, "asdfgfdsa")]
+		[InlineData("aaasdfgfdsaff", 1, 11, "asdfgfdsa")]
+		[InlineData("aasdffdsaf", 0, 9, "asdffdsa")]
+		[InlineData("hhhh", 0, 3, "hhhh")]
 		public void FindsLargestPalindromeInGivenRange(
 			string input,
 			int startIndex,
 			int endIndex,
-			int palindromeStart,
-			int palindromeEnd)
+			string largest)
 		{
 			var result = Engine.FindLargestPalindrome(input, startIndex, endIndex);
 
-			Assert.Equal(palindromeStart, result.Value.Start);
-			Assert.Equal(palindromeEnd, result.Value.End);
+			Assert.Equal(largest, result.Value.Text);
 		}
 
 		[Theory]
