@@ -14,11 +14,13 @@ namespace Palindromes
 			int howMany)
 		{
 			if (InvalidInput(input)) return Array.Empty<(string, int, int)>();
-			var found = new List<(int Start, int End, int Length)>(howMany);
+			var found = new List<(int Start, int Length)>(howMany);
 
 			FindPalindromes(input, howMany, found);
 
-			return ParseResults(input, found);
+			return ParseResults(
+				input,
+				found.Select(p => (p.Start, p.Length)).ToList());
 		}
 
 		public static (string Text, int Start, int Length)? FindLargestPalindrome(
@@ -27,20 +29,19 @@ namespace Palindromes
 			int endIndex)
 		{
 			if (string.IsNullOrWhiteSpace(input)) return null;
-			var found = FindLargest(input, startIndex, endIndex);
+			var found = FindLargest(input, startIndex, endIndex - startIndex);
 			if (!found.HasValue) return null;
-			var length = found.Value.End - found.Value.Start + 1;
 			return (input.Substring(
 				found.Value.Start,
-				length),
+				found.Value.Length + 1),
 				found.Value.Start,
-				length);
+				found.Value.Length);
 		}
 
 		private static void FindPalindromes(
 			string input,
 			int howMany,
-			List<(int Start, int End, int Length)> found)
+			List<(int Start, int Length)> found)
 		{
 			var spanInput = input.AsSpan();
 			FindAndSave(spanInput, howMany, 0, input.Length - 1, found);
@@ -57,11 +58,12 @@ namespace Palindromes
 			}
 		}
 
-		private static (int Start, int End)? FindLargest(
+		private static (int Start, int Length)? FindLargest(
 			ReadOnlySpan<char> input,
 			int startIndex,
-			int endIndex)
+			int length)
 		{
+			var endIndex = startIndex + length;
 			if (startIndex == endIndex) return null;
 
 			var middle = (endIndex + startIndex) / 2;
@@ -74,15 +76,15 @@ namespace Palindromes
 				{
 					return ++i >= --j
 						? default((int, int)?)
-						: (i, j);
+						: (i, j - i);
 				}
 			}
 
-			return (++i, --j);
+			return (++i, --j - i);
 		}
 
 		private static bool NoPotentialForLargeEnoughPalindrome(
-			List<(int Start, int End, int Length)> found,
+			List<(int Start, int Length)> found,
 			int howMany,
 			int maxPossibleLength)
 		{
@@ -101,9 +103,9 @@ namespace Palindromes
 			int maxSize,
 			int start,
 			int end,
-			List<(int Start, int End, int Length)> found)
+			List<(int Start, int Length)> found)
 		{
-			var result = FindLargest(input, start, end);
+			var result = FindLargest(input, start, end - start);
 			if (result.HasValue)
 			{
 				Add(
@@ -111,18 +113,17 @@ namespace Palindromes
 					maxSize,
 					found,
 					result.Value.Start,
-					result.Value.End);
+					result.Value.Length + 1);
 			}
 		}
 
 		private static void Add(
 			ReadOnlySpan<char> input,
 			int maxSize,
-			List<(int Start, int End, int Length)> found,
+			List<(int Start, int Length)> found,
 			int start,
-			int end)
+			int length)
 		{
-			var length = end - start + 1;
 			if (NeedsToBeSaved(input, maxSize, found, start, length))
 			{
 				if (found.Count == maxSize)
@@ -132,12 +133,12 @@ namespace Palindromes
 
 				found.Insert(
 					FindIndex(found, length),
-					(start, end, length));
+					(start, length));
 			}
 		}
 
 		private static int FindIndex(
-			List<(int Start, int End, int Length)> found,
+			List<(int Start, int Length)> found,
 			int length)
 		{
 			var i = 0;
@@ -152,7 +153,7 @@ namespace Palindromes
 		private static bool NeedsToBeSaved(
 			ReadOnlySpan<char> input,
 			int maxSize,
-			List<(int Start, int End, int Length)> found,
+			List<(int Start, int Length)> found,
 			int start,
 			int length)
 		{
@@ -175,7 +176,7 @@ namespace Palindromes
 
 		private static List<(string, int, int)> ParseResults(
 			string input,
-			List<(int Start, int End, int Length)> found)
+			List<(int Start, int Length)> found)
 		{
 			return found
 				.Select(p => (input.Substring(p.Start, p.Length), p.Start, p.Length))
