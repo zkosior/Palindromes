@@ -16,19 +16,7 @@ namespace Palindromes
 			if (InvalidInput(input)) return Array.Empty<(string, int, int)>();
 			var found = new List<(int Start, int End, int Length)>(howMany);
 
-			var spanInput = input.AsSpan();
-			FindAndSave(spanInput, howMany, 0, input.Length - 1, found);
-
-			for (int i = 1; i < input.Length - 2; i++)
-			{
-				if (NoPotentialForLargeEnoughPalindrome(
-					found,
-					howMany,
-					input.Length - 1 - i)) break;
-
-				FindAndSave(spanInput, howMany, 0, input.Length - 1 - i, found);
-				FindAndSave(spanInput, howMany, i, input.Length - 1, found);
-			}
+			FindPalindromes(input, howMany, found);
 
 			return ParseResults(input, found);
 		}
@@ -47,6 +35,26 @@ namespace Palindromes
 				length),
 				found.Value.Start,
 				length);
+		}
+
+		private static void FindPalindromes(
+			string input,
+			int howMany,
+			List<(int Start, int End, int Length)> found)
+		{
+			var spanInput = input.AsSpan();
+			FindAndSave(spanInput, howMany, 0, input.Length - 1, found);
+
+			for (int i = 1; i < input.Length - 2; i++)
+			{
+				if (NoPotentialForLargeEnoughPalindrome(
+					found,
+					howMany,
+					input.Length - 1 - i)) break;
+
+				FindAndSave(spanInput, howMany, 0, input.Length - 1 - i, found);
+				FindAndSave(spanInput, howMany, i, input.Length - 1, found);
+			}
 		}
 
 		private static (int Start, int End)? FindLargest(
