@@ -29,11 +29,11 @@ namespace Palindromes
 			int endIndex)
 		{
 			if (string.IsNullOrWhiteSpace(input)) return null;
-			var found = FindLargest(input, startIndex, endIndex - startIndex);
+			var found = FindLargest(input, startIndex, endIndex - startIndex + 1);
 			if (!found.HasValue) return null;
 			return (input.Substring(
 				found.Value.Start,
-				found.Value.Length + 1),
+				found.Value.Length),
 				found.Value.Start,
 				found.Value.Length);
 		}
@@ -63,7 +63,7 @@ namespace Palindromes
 			int startIndex,
 			int length)
 		{
-			var endIndex = startIndex + length;
+			var endIndex = startIndex + length - 1;
 			if (startIndex == endIndex) return null;
 
 			var middle = (endIndex + startIndex) / 2;
@@ -76,11 +76,11 @@ namespace Palindromes
 				{
 					return ++i >= --j
 						? default((int, int)?)
-						: (i, j - i);
+						: (i, j - i + 1);
 				}
 			}
 
-			return (++i, --j - i);
+			return (++i, --j - i + 1);
 		}
 
 		private static bool NoPotentialForLargeEnoughPalindrome(
@@ -105,7 +105,7 @@ namespace Palindromes
 			int end,
 			List<(int Start, int Length)> found)
 		{
-			var result = FindLargest(input, start, end - start);
+			var result = FindLargest(input, start, end - start + 1);
 			if (result.HasValue)
 			{
 				Add(
@@ -113,7 +113,7 @@ namespace Palindromes
 					maxSize,
 					found,
 					result.Value.Start,
-					result.Value.Length + 1);
+					result.Value.Length);
 			}
 		}
 
